@@ -11,9 +11,8 @@ class RootIndex extends React.Component {
     const siteTitle = get(this, 'props.data.site.siteMetadata.title')
     const posts = get(this, 'props.data.allContentfulBlogPost.edges')
     const [author] = get(this, 'props.data.allContentfulPerson.edges')
-
     return (
-      <Layout location={this.props.location} >
+      <Layout location={this.props.location}>
         <div style={{ background: '#fff' }}>
           <Helmet title={siteTitle} />
           <Hero data={author.node} />
@@ -21,6 +20,7 @@ class RootIndex extends React.Component {
             <h2 className="section-headline">Recent articles</h2>
             <ul className="article-list">
               {posts.map(({ node }) => {
+                console.log(node)
                 return (
                   <li key={node.slug}>
                     <ArticlePreview article={node} />
@@ -52,11 +52,12 @@ export const pageQuery = graphql`
           publishDate(formatString: "MMMM Do, YYYY")
           tags
           heroImage {
-            fluid(maxWidth: 350, maxHeight: 196, resizingBehavior: SCALE) {
-             ...GatsbyContentfulFluid_tracedSVG
+            fluid(resizingBehavior: SCALE, maxHeight: 300, maxWidth: 300) {
+              tracedSVG
             }
           }
           description {
+            description
             childMarkdownRemark {
               html
             }
@@ -64,7 +65,9 @@ export const pageQuery = graphql`
         }
       }
     }
-    allContentfulPerson(filter: { contentful_id: { eq: "15jwOBqpxqSAOy2eOO4S0m" } }) {
+    allContentfulPerson(
+      filter: { contentful_id: { eq: "15jwOBqpxqSAOy2eOO4S0m" } }
+    ) {
       edges {
         node {
           name
